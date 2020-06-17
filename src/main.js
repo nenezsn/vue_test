@@ -5,14 +5,11 @@ import App from './App'
 import router from './router' // vue-router
 import store from './store' // vuex
 import ElementUI from 'element-ui' //elm 组件库
-import iView from 'iview';
-import 'iview/dist/styles/iview.css';
 import echarts from 'echarts';
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 Vue.config.silent =true
 //引入组件库
 Vue.use(ElementUI);
-Vue.use(iView);
 Vue.config.devtools = true
 Vue.prototype.$echarts = echarts;
 //谨慎使用

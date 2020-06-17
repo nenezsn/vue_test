@@ -3,7 +3,7 @@
     <a-component @aConfirm="log" title="对象声明方式创建组件"/>
     <b-component name="插槽">
       <div>content</div>
-      <div slot="empty">插入指定slot</div>
+      <div slot="empty" >插入指定slot</div>
     </b-component>
     <c-component color="red"/>
     <component :is="cureentComponent"/>
@@ -29,7 +29,7 @@ var componentB = {
   <h5>{{name}}</h5>
     <div>header</div>
     <slot name='empty'></slot>
-    <slot></slot>
+    <slot'></slot>
     <div>footer</div>
   </div>`
 }

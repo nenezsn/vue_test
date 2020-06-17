@@ -55,7 +55,13 @@
     <c-com :title.sync='title'/>
     <!-- (camelCase vs kebab-case) -->
     <b-com post-title="王冰" :count="1"/>
-
+    <!-- keep-alive -->
+    <keep-alive>
+      <component :is='crrentCom' postTitle='B' count='2'/>
+    </keep-alive>
+    <button @click="crrentCom = 'a-com'">a</button>
+    <button @click="crrentCom = 'b-com'">b</button>
+    <button @click="crrentCom = 'c-com'">c</button>
   </div>
 </template>
 
@@ -93,7 +99,6 @@ const comB = {
     console.log(typeof this.count)
   },
 }
-
 const comC={
   props:['title'],
   template:'<input @input="change"/>',
@@ -116,7 +121,8 @@ export default {
       show: true,
       list: [{ name: '张三', age: 12 }, { name: '李四', age: 16 }],
       isActive: true,
-      loginType: 'username'
+      loginType: 'username',
+      crrentCom:'a-com'
     }
   },
   methods: {

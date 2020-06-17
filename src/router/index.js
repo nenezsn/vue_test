@@ -9,10 +9,10 @@ import Footer from '../components/layout/footer'
 import Component from '../routes/component'
 
 import Vueroute from '../routes/vueroute'
-import HomePage from '../routes/homepage'
 import TodoList from '../routes/todoList'
 import Method from '../routes/method'
 import ElementComponent from '../routes/Element'
+import Vx from '../routes/vuex'
 
 import Echarts from '../routes/Echarts'
 import Demo from '../routes/demo'
@@ -45,11 +45,6 @@ export default new Router({
       ]
     },
     {
-      path: '/homepage',
-      name: 'HomePage',
-      component: HomePage
-    },
-    {
       path: '/TodoList',
       name: 'TodoList',
       component: TodoList
@@ -76,6 +71,10 @@ export default new Router({
     {
       path:'/com',
       component:Component
+    },
+    {
+      path:'/Vx',
+      component:Vx
     },
     {
       path: '*',
