@@ -14,7 +14,6 @@ import Vx from '../routes/vuex'
 import Life from '../routes/life'
 
 import Echarts from '../routes/Echarts'
-import Demo from '../routes/demo'
 
 Vue.use(Router)
 
@@ -52,10 +51,6 @@ export default new Router({
       path: '/Echarts',
       name: 'Echarts',
       component: Echarts
-    },
-    {
-      path: '/Demo',
-      component: Demo
     },
     {
       path: '/com',

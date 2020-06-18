@@ -12,7 +12,8 @@
     <!-- 可以被 this.$listeners 监听到 -->
     <e-component @focus="onFocus"/>
     <!-- jsx -->
-    <f-component/>
+    <f-component :count='0'/>
+    <!-- new Component -->
     <div id="target"></div>
   </div>
 </template>
@@ -36,7 +37,7 @@ var componentB = {
     <div>footer</div>
   </div>`
 }
-// 方法3(放在入口文件 可以变成全局组件)
+// 方法3(注册全局组件)
 Vue.component('c-component', {
   // 可以避免非html属性默认绑定在根元素上，$attrs保存的是除props和html自身属性之外的属性
   inheritAttrs: false,
@@ -60,14 +61,15 @@ const componentE = {
 }
 // jsx
 var componentF = {
-  data: function () {
+  props:['count'],
+  data:function(){
     return {
-      count: 0
-    };
+      num:this.count
+    }
   },
   methods: {
     add: function () {
-      this.count += 1
+      this.num += 1
     }
   },
   mounted() {
@@ -75,15 +77,16 @@ var componentF = {
   },
   render(h) {
     return <div>
-      <h4>{this.count}</h4>
+      <h4>{this.num}</h4>
       <button onClick={this.add}>加一</button>
     </div>;
   }
 };
 
 // new Component
-var componentF = Vue.extend({
-  template: '<div>Vue.extend</div>'
+var componentG = Vue.extend({
+  props:['title'],
+  template: '<div>{{title}}</div>'
 })
 
 export default {
@@ -107,7 +110,7 @@ export default {
     }
   },
   mounted() {
-    new componentF().$mount('#target')
+    new componentG({propsData:{title:'new出来的'}}).$mount('#target')
   }
 }
 </script>

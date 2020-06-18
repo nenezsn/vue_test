@@ -1,5 +1,5 @@
 <template>
-  <div id='life'>{{title}}</div>
+  <div ref='life'>{{title}}</div>
 </template>
 
 <script>
@@ -10,28 +10,28 @@ export default {
     }
   },
   beforeCreate(){
-    console.log('beforeCreate',this,life)
+    console.log('beforeCreate',this,this.title,this.$refs.life)
   },
   created(){
-    console.log('created',this,life)
+    console.log('created',this,this.title,this.$refs.life)
   },
   beforeMount(){
-    console.log('beforeMount',this,life)
+    console.log('beforeMount',this,this.title,this.$refs.life)
   },
   mounted(){
-    console.log('mounted',this,life)
+    console.log('mounted',this,this.title,this.$refs.life)
   },
   beforeUpdate(){
-    console.log('beforeUpdate',this,life)
+    console.log('beforeUpdate',this,this.title,this.$refs.life)
   },
   updated() {
-    console.log('updated',this,life)
+    console.log('updated',this,this.title,this.$refs.life)
   },
   beforeDestroy(){
-    console.log('beforeDestroy',this,life)
+    console.log('beforeDestroy',this,this.title,this.$refs.life)
   },
   destroyed(){
-    console.log('destroyed',this,life)
+    console.log('destroyed',this,this.title,this.$refs.life)
   }
 }
 </script>

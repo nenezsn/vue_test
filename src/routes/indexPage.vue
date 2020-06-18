@@ -19,7 +19,7 @@
     <!-- filter -->
     <div>{{content | Upcase}}</div>
     <!-- 自定义指令 -->
-    <div v-insert>插入</div>
+    <span v-insert v-if='domshow'>插入</span><button @click='domshow = ! domshow'>{{domshow ? '隐藏' : '显示'}}</button>
     <!-- 普通事件 -->
     <span>{{count}}</span>
     <button @click="count+=1">加</button>
@@ -72,6 +72,7 @@
       <button @click="fixArray">修改数组</button>
       <span>{{info.name}}-{{info.age}}</span>
       <button @click="addProperty">增加对象属性</button>
+      <button @click="removeProperty">删除对象属性</button>
     </div>
     <!-- ref使用（和react一样 或者真实dom或者组件实例） -->
     <div>
@@ -80,15 +81,19 @@
       <d-com ref="dcom"></d-com>
       <button @click="getdcom">操作组件dom</button>
     </div>
+    <!-- $on $emit -->
     <div>
       <button @click="handleOnEvent">监听</button>
       <button @click="$emit('msg',1)">触发</button>
       <button @click="handleCloseEvent">关闭</button>
     </div>
+    <!-- vue不会代理_ $开头的property 需使用$data.[property] -->
+    <div>111{{$data._title}}</div>
   </div>
 </template>
 
 <script>
+import mix from '../minin.js'
 
 const comA = {
   props: ['value'],
@@ -98,7 +103,8 @@ const comB = {
   // 在 JavaScript 中是 camelCase 的
   props: ['postTitle', 'count'],
   // props: {
-  //   postTitle: String
+  //   postTitle: String,
+  //   count:String
   // },
   // props: {
   //   postTitle: {
@@ -117,10 +123,7 @@ const comB = {
   //     }
   //   }
   // },
-  template: '<h3>{{ postTitle }}</h3>',
-  mounted() {
-    console.log(typeof this.count)
-  },
+  template: '<h3>{{ postTitle }}</h3>'
 }
 const comC = {
   props: ['title'],
@@ -147,8 +150,10 @@ const comD = {
 
 // 基本用法
 export default {
+  mixins:[mix],
   data() {
     return {
+      _title:'haha',
       title: '组件model',
       content: 'abcd',
       mac: 100,
@@ -162,7 +167,8 @@ export default {
       numbers: [15, 16, 17],
       info: {
         name: '王冰'
-      }
+      },
+      domshow:true
     }
   },
   methods: {
@@ -178,6 +184,9 @@ export default {
     addProperty() {
       this.$set(this.info, 'age', 16)
     },
+    removeProperty() {
+      this.$delete(this.info, 'age')
+    },
     getDom() {
       this.$refs.dom.style.color = 'red'
     },
@@ -189,7 +198,7 @@ export default {
         console.log("创建阶段监听，同watch", msg);
       });
     },
-    handleCloseEvent(){
+    handleCloseEvent() {
       this.$off("msg")
     }
   },
@@ -206,7 +215,7 @@ export default {
       handler(a) {
         console.log('监听info', a)
       },
-      immediate: true, //watch再初始化阶段是不执行的 写成handler 和 immediate 的形式 会执行一次
+      immediate: false, //watch再初始化阶段是不执行的 写成handler 和 immediate 的形式 会执行一次
       deep: true //这条属性可以帮助你监测 status内部的属性变化（当status是一个对象的时候）
     }
   },
@@ -215,12 +224,13 @@ export default {
       return value ? value.toString().toLocaleUpperCase() : ''
     }
   },
-   directives: {
+  directives: {
     'insert': {
-      // 指令的定义
-      inserted: function (el) {
-        console.log('el',el.innerHTML)
-      }
+      bind: function () { console.log('bind') },
+      inserted: function () { console.log('inserted')  },
+      update: function () { console.log('update')  },
+      componentUpdated: function () { console.log('componentUpdated')  },
+      unbind: function () { console.log('unbind')  }
     }
   },
   components: {
