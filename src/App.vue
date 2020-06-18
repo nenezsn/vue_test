@@ -2,9 +2,8 @@
   <div class='box'>
         <router-link to='/'>首页</router-link>
         <router-link to='/com'>组件</router-link>
-        <router-link to='/TodoList'>跳转todoList</router-link>
-        <router-link to='/method'>跳转method</router-link>
-        <router-link to='/homepage'>跳转homepage</router-link>
+        <router-link to='/Vx'>vuex</router-link>
+        <router-link to='/life'>声明周期</router-link>
       <router-view/>
   </div>
 </template>

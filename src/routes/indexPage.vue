@@ -18,6 +18,8 @@
     <div>total:{{totalPrice}}</div>
     <!-- filter -->
     <div>{{content | Upcase}}</div>
+    <!-- 自定义指令 -->
+    <div v-insert>插入</div>
     <!-- 普通事件 -->
     <span>{{count}}</span>
     <button @click="count+=1">加</button>
@@ -52,16 +54,37 @@
     </ul>
     <!-- sync语法糖 同1效果一样 -->
     <!-- <c-com :title = 'title' @update:title='title = $event'/> -->
-    <c-com :title.sync='title'/>
+    <c-com :title.sync="title"/>
     <!-- (camelCase vs kebab-case) -->
     <b-com post-title="王冰" :count="1"/>
     <!-- keep-alive -->
-    <keep-alive>
-      <component :is='crrentCom' postTitle='B' count='2'/>
-    </keep-alive>
-    <button @click="crrentCom = 'a-com'">a</button>
-    <button @click="crrentCom = 'b-com'">b</button>
-    <button @click="crrentCom = 'c-com'">c</button>
+    <div>
+      <keep-alive>
+        <component :is="crrentCom" postTitle="B" count="2"/>
+      </keep-alive>
+      <button @click="crrentCom = 'a-com'">a</button>
+      <button @click="crrentCom = 'b-com'">b</button>
+      <button @click="crrentCom = 'c-com'">c</button>
+    </div>
+    <!-- 数组和对象响应式处理 -->
+    <div>
+      <span v-for="(item) in numbers" :key="item">{{item}}</span>
+      <button @click="fixArray">修改数组</button>
+      <span>{{info.name}}-{{info.age}}</span>
+      <button @click="addProperty">增加对象属性</button>
+    </div>
+    <!-- ref使用（和react一样 或者真实dom或者组件实例） -->
+    <div>
+      <span ref="dom">通过ref获取dom</span>
+      <button @click="getDom">操作dom</button>
+      <d-com ref="dcom"></d-com>
+      <button @click="getdcom">操作组件dom</button>
+    </div>
+    <div>
+      <button @click="handleOnEvent">监听</button>
+      <button @click="$emit('msg',1)">触发</button>
+      <button @click="handleCloseEvent">关闭</button>
+    </div>
   </div>
 </template>
 
@@ -99,14 +122,27 @@ const comB = {
     console.log(typeof this.count)
   },
 }
-const comC={
-  props:['title'],
-  template:'<input @input="change"/>',
-  methods:{
-    change(e){
-      this.$emit('update:title',e.target.value)
+const comC = {
+  props: ['title'],
+  template: '<input @input="change"/>',
+  methods: {
+    change(e) {
+      this.$emit('update:title', e.target.value)
     }
   }
+}
+const comD = {
+  data() {
+    return {
+      count: 1
+    }
+  },
+  methods: {
+    add() {
+      this.count += 1
+    }
+  },
+  template: '<button @click="add">加{{count}}</button>'
 }
 
 // 基本用法
@@ -122,12 +158,39 @@ export default {
       list: [{ name: '张三', age: 12 }, { name: '李四', age: 16 }],
       isActive: true,
       loginType: 'username',
-      crrentCom:'a-com'
+      crrentCom: 'a-com',
+      numbers: [15, 16, 17],
+      info: {
+        name: '王冰'
+      }
     }
   },
   methods: {
     sub(val, e) {
       this.count -= val
+    },
+    fixArray() {
+      // vue重写了数组的一些方法
+      this.$set(this.numbers, 0, 12)
+      // this.numbers.splice(0,1,12)
+      // this.numbers.push(19)
+    },
+    addProperty() {
+      this.$set(this.info, 'age', 16)
+    },
+    getDom() {
+      this.$refs.dom.style.color = 'red'
+    },
+    getdcom() {
+      this.$refs.dcom.add()
+    },
+    handleOnEvent() {
+      this.$on("msg", msg => {
+        console.log("创建阶段监听，同watch", msg);
+      });
+    },
+    handleCloseEvent(){
+      this.$off("msg")
     }
   },
   computed: {
@@ -138,6 +201,13 @@ export default {
   watch: {
     totalPrice: function (newValue, oldValue) {
       console.log('合计发生变化', oldValue + '=>' + newValue)
+    },
+    info: {
+      handler(a) {
+        console.log('监听info', a)
+      },
+      immediate: true, //watch再初始化阶段是不执行的 写成handler 和 immediate 的形式 会执行一次
+      deep: true //这条属性可以帮助你监测 status内部的属性变化（当status是一个对象的时候）
     }
   },
   filters: {
@@ -145,10 +215,19 @@ export default {
       return value ? value.toString().toLocaleUpperCase() : ''
     }
   },
+   directives: {
+    'insert': {
+      // 指令的定义
+      inserted: function (el) {
+        console.log('el',el.innerHTML)
+      }
+    }
+  },
   components: {
     'a-com': comA,
     'b-com': comB,
-    'c-com':comC
+    'c-com': comC,
+    'd-com': comD
   }
 }
 </script>

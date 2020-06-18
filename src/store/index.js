@@ -1,55 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import todo from './modules/todo.js'
-import method from './modules/method.js'
 import count from './modules/count.js'
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
-  state: {
-    count: 1,
-    courseList: [{ status: 0 }, { status: 1 }, { status: 0 }, { status: 0 }]
+  state:{
+    name:'vue'
   },
-  //可以在mutation使用异步，但是不容易生成状态更改前和更改后的快照。
-  mutations: {
-    addCount(state, payload) {
-      console.log('payload', payload)
-      state.count += payload
-    },
-    cutCount(state, payload) {
-      state.count -= payload.num
-    }
-  },
-  getters: {
-    courseListDone: (state) => (id) => {
-      return state.courseList.filter(item => item.status == id)
-    }
-  },
-  actions: {
-    delay(context, num) {
-      return new Promise(resolve => {
-        setTimeout(() => {
-          resolve(`${num}秒时间到了`)
-          console.log(`${num}秒时间到了`)
-        }, num * 1000)
-      })
-    },
-    async addCountAsync({ commit, dispatch, rootState }, payload) {
-      console.log('rootState', rootState)
-      const data = await dispatch('delay', 3)
-      commit('addCount', payload)
-      return data
-    }
-  },
-  modules: {
-    count,
-    todo,
-    method
-  }
+  // modules: {
+  //   count,
+  // }
 })
-store.registerModule('myModule', {
-  state: {
-    myModule: '注册的模块'
-  }
-})
+store.registerModule('count', count)
 export default store

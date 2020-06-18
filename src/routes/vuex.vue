@@ -9,7 +9,10 @@
 </template>
 
 <script>
-import { mapState, mapMutations,mapGetters } from 'vuex'
+import { mapState, mapMutations,mapGetters,createNamespacedHelpers } from 'vuex'
+// const { mapState, mapMutations,mapGetters } = createNamespacedHelpers('count')
+
+
 export default {
   data: function () {
     return {}
@@ -21,10 +24,13 @@ export default {
     ...mapMutations('count', ['add','sub'])
   },
   computed: {
-    ...mapState('count',['count']),
+    ...mapState('count',['count']),   //相当于$store.state.count.count
     ...mapGetters('count',{
       price: 'price'
     })
+  },
+  mounted(){
+    console.log('222',this.$store.state)
   }
 }
 </script>

@@ -7,7 +7,7 @@ import store from './store' // vuex
 import ElementUI from 'element-ui' //elm 组件库
 import echarts from 'echarts';
 // Vue.config.productionTip = false
-Vue.config.silent =true
+// Vue.config.silent =true
 //引入组件库
 Vue.use(ElementUI);
 Vue.config.devtools = true

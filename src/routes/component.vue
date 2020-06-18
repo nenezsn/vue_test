@@ -3,14 +3,17 @@
     <a-component @aConfirm="log" title="对象声明方式创建组件"/>
     <b-component name="插槽">
       <div>content</div>
-      <div slot="empty" >插入指定slot</div>
+      <div slot="empty">插入指定slot</div>
     </b-component>
     <c-component color="red"/>
-    <component :is="cureentComponent"/>
+    <component :is="cureentComponent" @aConfirm="log" title="对象声明方式创建组件"/>
     <!-- 默认作用域根节点 -->
     <e-component @focus.native="onFocus"/>
     <!-- 可以被 this.$listeners 监听到 -->
     <e-component @focus="onFocus"/>
+    <!-- jsx -->
+    <f-component/>
+    <div id="target"></div>
   </div>
 </template>
 
@@ -29,7 +32,7 @@ var componentB = {
   <h5>{{name}}</h5>
     <div>header</div>
     <slot name='empty'></slot>
-    <slot'></slot>
+    <slot></slot>
     <div>footer</div>
   </div>`
 }
@@ -47,7 +50,7 @@ Vue.component('c-component', {
   },
   template: `<button v-on:click="count++"><span v-bind='$attrs'>You clicked me {{ count }} times.</span></button>`
 })
-
+// 测试绑定事件
 const componentE = {
   // template:'<input/>',
   template: '<div><input v-on="$listeners"/></div>',
@@ -55,6 +58,33 @@ const componentE = {
     console.log('2', this.$listeners)
   },
 }
+// jsx
+var componentF = {
+  data: function () {
+    return {
+      count: 0
+    };
+  },
+  methods: {
+    add: function () {
+      this.count += 1
+    }
+  },
+  mounted() {
+    console.log("this,", this);
+  },
+  render(h) {
+    return <div>
+      <h4>{this.count}</h4>
+      <button onClick={this.add}>加一</button>
+    </div>;
+  }
+};
+
+// new Component
+var componentF = Vue.extend({
+  template: '<div>Vue.extend</div>'
+})
 
 export default {
   data() {
@@ -65,7 +95,8 @@ export default {
   components: {
     'a-component': componentA,
     'b-component': componentB,
-    'e-component': componentE
+    'e-component': componentE,
+    'f-component': componentF
   },
   methods: {
     log(value) {
@@ -74,6 +105,9 @@ export default {
     onFocus() {
       console.log('获取焦点')
     }
+  },
+  mounted() {
+    new componentF().$mount('#target')
   }
 }
 </script>
