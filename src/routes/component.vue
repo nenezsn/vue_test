@@ -1,9 +1,12 @@
 <template>
   <div>
     <a-component @aConfirm="log" title="对象声明方式创建组件"/>
-    <b-component name="插槽">
-      <div>content</div>
-      <div slot="empty">插入指定slot</div>
+    <b-component name="插槽" >
+      <div slot="header">这个是头部</div>
+      <div >父级作用域count{{count}}</div>
+      <div slot-scope="slotProps">
+        {{slotProps.user}}
+      </div>
     </b-component>
     <c-component color="red"/>
     <component :is="cureentComponent" @aConfirm="log" title="对象声明方式创建组件"/>
@@ -12,31 +15,22 @@
     <!-- 可以被 this.$listeners 监听到 -->
     <e-component @focus="onFocus"/>
     <!-- jsx -->
-    <f-component :count='0'/>
+    <f-component :count="0"/>
     <!-- new Component -->
     <div id="target"></div>
   </div>
 </template>
 
-
 <script>
 import Vue from 'vue'
+// 插槽
+import Container from '../components/container'
 // 对象声明
 var componentA = {
   props: ['title', 'confirm'],
   template: `<button @click="$emit('aConfirm','对象声明')">{{title}}</button>`
 }
-// 带插槽功能
-var componentB = {
-  props: ['name'],
-  template: `<div>
-  <h5>{{name}}</h5>
-    <div>header</div>
-    <slot name='empty'></slot>
-    <slot></slot>
-    <div>footer</div>
-  </div>`
-}
+
 // 方法3(注册全局组件)
 Vue.component('c-component', {
   // 可以避免非html属性默认绑定在根元素上，$attrs保存的是除props和html自身属性之外的属性
@@ -51,53 +45,58 @@ Vue.component('c-component', {
   },
   template: `<button v-on:click="count++"><span v-bind='$attrs'>You clicked me {{ count }} times.</span></button>`
 })
+
 // 测试绑定事件
 const componentE = {
-  // template:'<input/>',
   template: '<div><input v-on="$listeners"/></div>',
-  mounted() {
-    console.log('2', this.$listeners)
-  },
 }
 // jsx
 var componentF = {
-  props:['count'],
-  data:function(){
+  props: ['count'],
+  data: function () {
     return {
-      num:this.count
+      num: this.count
     }
   },
   methods: {
     add: function () {
       this.num += 1
+    },
+    renderNum: function (h) {
+      return <h4>{this.num}</h4>
     }
   },
-  mounted() {
-    console.log("this,", this);
-  },
   render(h) {
+    // return h('h4',{
+    //   style:{'color':'red'}
+    // },this.num)
+
     return <div>
-      <h4>{this.num}</h4>
+      {this.renderNum(h)}
       <button onClick={this.add}>加一</button>
     </div>;
   }
 };
 
+
+
+
 // new Component
 var componentG = Vue.extend({
-  props:['title'],
+  props: ['title'],
   template: '<div>{{title}}</div>'
 })
 
 export default {
   data() {
     return {
+      count:0,
       cureentComponent: 'a-component'
     }
   },
   components: {
     'a-component': componentA,
-    'b-component': componentB,
+    'b-component': Container,
     'e-component': componentE,
     'f-component': componentF
   },
@@ -110,7 +109,7 @@ export default {
     }
   },
   mounted() {
-    new componentG({propsData:{title:'new出来的'}}).$mount('#target')
+    new componentG({ propsData: { title: 'new出来的' } }).$mount('#target')
   }
 }
 </script>
