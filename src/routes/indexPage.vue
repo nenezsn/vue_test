@@ -88,7 +88,8 @@
       <button @click="handleCloseEvent">关闭</button>
     </div>
     <!-- vue不会代理_ $开头的property 需使用$data.[property] -->
-    <div>111{{$data._title}}</div>
+    <div>{{$data._title}}</div>
+
   </div>
 </template>
 
@@ -143,9 +144,15 @@ const comD = {
   methods: {
     add() {
       this.count += 1
+    },
+    handleParentEvent(){
+      this.$parent.log()
     }
   },
-  template: '<button @click="add">加{{count}}</button>'
+  template: `<div>
+  <button @click="add">加{{count}}</button>
+  <button @click="handleParentEvent">this.$parent</button>
+  </div>`
 }
 
 // 基本用法
@@ -192,6 +199,7 @@ export default {
     },
     getdcom() {
       this.$refs.dcom.add()
+      // this.$children[4].add()
     },
     handleOnEvent() {
       this.$on("msg", msg => {
@@ -200,6 +208,9 @@ export default {
     },
     handleCloseEvent() {
       this.$off("msg")
+    },
+    log(){
+      alert('1')
     }
   },
   computed: {
@@ -238,6 +249,9 @@ export default {
     'b-com': comB,
     'c-com': comC,
     'd-com': comD
+  },
+  mounted(){
+    console.log('this',this.$children)
   }
 }
 </script>
