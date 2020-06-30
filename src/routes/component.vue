@@ -1,12 +1,10 @@
 <template>
   <div>
     <a-component @aConfirm="log" title="对象声明方式创建组件"/>
-    <b-component name="插槽" >
+    <b-component name="插槽">
       <div slot="header">这个是头部</div>
-      <div >父级作用域count{{count}}</div>
-      <div slot-scope="slotProps">
-        {{slotProps.user}}
-      </div>
+      <div>父级作用域count{{count}}</div>
+      <div slot-scope="slotProps">{{slotProps.user}}</div>
     </b-component>
     <c-component color="red"/>
     <component :is="cureentComponent" @aConfirm="log" title="对象声明方式创建组件"/>
@@ -18,6 +16,8 @@
     <f-component :count="0"/>
     <!-- new Component -->
     <div id="target"></div>
+    <!-- 函数式组件 -->
+    <h-component title="你好" @reflash="handleFlash">222</h-component>
   </div>
 </template>
 
@@ -64,7 +64,8 @@ var componentF = {
     },
     renderNum: function (h) {
       return <h4>{this.num}</h4>
-    }
+    },
+
   },
   render(h) {
     // return h('h4',{
@@ -87,10 +88,18 @@ var componentG = Vue.extend({
   template: '<div>{{title}}</div>'
 })
 
+//函数式组件
+var componentH = {
+  functional: true,
+  render(h, { props, listeners, children }) {
+    return <button onClick={listeners.reflash}>{props.title}{children}</button>
+  }
+}
+
 export default {
   data() {
     return {
-      count:0,
+      count: 0,
       cureentComponent: 'a-component'
     }
   },
@@ -98,7 +107,8 @@ export default {
     'a-component': componentA,
     'b-component': Container,
     'e-component': componentE,
-    'f-component': componentF
+    'f-component': componentF,
+    'h-component': componentH
   },
   methods: {
     log(value) {
@@ -106,6 +116,9 @@ export default {
     },
     onFocus() {
       console.log('获取焦点')
+    },
+    handleFlash() {
+      console.log('函数式组件触发回调')
     }
   },
   mounted() {

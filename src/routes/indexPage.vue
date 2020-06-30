@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div id='1'>
     <!-- v-model -->
     <div>
       mac:
@@ -60,11 +60,11 @@
     <!-- keep-alive -->
     <div>
       <keep-alive>
-        <component :is="crrentCom" postTitle="B" count="2"/>
+        <component :is="currentCom" postTitle="B" count="2"/>
       </keep-alive>
-      <button @click="crrentCom = 'a-com'">a</button>
-      <button @click="crrentCom = 'b-com'">b</button>
-      <button @click="crrentCom = 'c-com'">c</button>
+      <button @click="currentCom = 'a-com'">a</button>
+      <button @click="currentCom = 'b-com'">b</button>
+      <button @click="currentCom = 'c-com'">c</button>
     </div>
     <!-- 数组和对象响应式处理 -->
     <div>
@@ -170,7 +170,7 @@ export default {
       list: [{ name: '张三', age: 12 }, { name: '李四', age: 16 }],
       isActive: true,
       loginType: 'username',
-      crrentCom: 'a-com',
+      currentCom: 'a-com',
       numbers: [15, 16, 17],
       info: {
         name: '王冰'
@@ -251,7 +251,6 @@ export default {
     'd-com': comD
   },
   mounted(){
-    console.log('this',this.$children)
   }
 }
 </script>

@@ -4,6 +4,7 @@
         <router-link to='/com'>组件</router-link>
         <router-link to='/Vx'>vuex</router-link>
         <router-link to='/life'>声明周期</router-link>
+        <router-link to='/vueroute/1'>router</router-link>
       <router-view/>
   </div>
 </template>

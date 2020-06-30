@@ -12,6 +12,8 @@ import echarts from 'echarts';
 Vue.use(ElementUI);
 Vue.config.devtools = true
 Vue.prototype.$echarts = echarts;
+import './index.css'
+
 //谨慎使用
 // Vue.mixin({
 //   created(){
