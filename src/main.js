@@ -6,14 +6,21 @@ import router from './router' // vue-router
 import store from './store' // vuex
 import ElementUI from 'element-ui' //elm 组件库
 import echarts from 'echarts';
+import log from '../plugin/log'
 // Vue.config.productionTip = false
 // Vue.config.silent =true
 //引入组件库
 Vue.use(ElementUI);
+Vue.use(log)
 Vue.config.devtools = true
 Vue.prototype.$echarts = echarts;
 import './index.css'
-
+Vue.directive('title', {
+  inserted: function (el, binding) {
+    console.log('222',el.dataset)
+    document.title = el.dataset.title;
+  }
+})
 //谨慎使用
 // Vue.mixin({
 //   created(){

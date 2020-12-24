@@ -1,6 +1,8 @@
 
 <template>
-  <div id='1'>
+  <div id='1' v-title data-title='index'>
+    <!-- 开发插件 -->
+  <log></log>
     <!-- v-model -->
     <div>
       mac:
@@ -17,9 +19,9 @@
     <!-- 计算属性 -->
     <div>total:{{totalPrice}}</div>
     <!-- filter -->
-    <div>{{content | Upcase}}</div>
+    <div>{{'abcde' | Upcase}}</div>
     <!-- 自定义指令 -->
-    <span v-insert v-if='domshow'>插入</span><button @click='domshow = ! domshow'>{{domshow ? '隐藏' : '显示'}}</button>
+    <span v-insert data-title='王冰' v-if='domshow'>插入</span><button @click='domshow = ! domshow'>{{domshow ? '隐藏' : '显示'}}</button>
     <!-- 普通事件 -->
     <span>{{count}}</span>
     <button @click="count+=1">加</button>
@@ -89,16 +91,21 @@
     </div>
     <!-- vue不会代理_ $开头的property 需使用$data.[property] -->
     <div>{{$data._title}}</div>
-
+    <lazy-component/>
   </div>
 </template>
 
 <script>
 import mix from '../minin.js'
+import Vue from 'vue';
 
 const comA = {
+  model:{
+    prop:'value',
+    event:'handle'
+  },
   props: ['value'],
-  template: `<input :value='value' @input="$emit('input',$event.target.value)"/>`
+  template: `<button @click='$emit("handle","value+1")'>组件v-model</button>`
 }
 const comB = {
   // 在 JavaScript 中是 camelCase 的
@@ -154,6 +161,11 @@ const comD = {
   <button @click="handleParentEvent">this.$parent</button>
   </div>`
 }
+ Vue.component('lazy-component',function(resolve,reject){
+   setTimeout(function(){
+     resolve({template:'<div>按需加载</div>'})
+   },5000)
+ })
 
 // 基本用法
 export default {
@@ -162,7 +174,6 @@ export default {
     return {
       _title:'haha',
       title: '组件model',
-      content: 'abcd',
       mac: 100,
       iphone: 50,
       count: 0,
@@ -198,6 +209,7 @@ export default {
       this.$refs.dom.style.color = 'red'
     },
     getdcom() {
+      console.log('2222',this.$children)
       this.$refs.dcom.add()
       // this.$children[4].add()
     },
@@ -226,12 +238,12 @@ export default {
       handler(a) {
         console.log('监听info', a)
       },
-      immediate: false, //watch再初始化阶段是不执行的 写成handler 和 immediate 的形式 会执行一次
+      immediate: false, //watch在初始化阶段是不执行的 写成handler 和 immediate 的形式 会执行一次
       deep: true //这条属性可以帮助你监测 status内部的属性变化（当status是一个对象的时候）
     }
   },
   filters: {
-    Upcase: function (value) {
+    Upcase (value) {
       return value ? value.toString().toLocaleUpperCase() : ''
     }
   },
